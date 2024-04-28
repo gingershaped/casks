@@ -3,6 +3,7 @@ package example.examplemod
 import example.examplemod.block.ModBlocks
 import net.minecraft.client.Minecraft
 import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
@@ -16,12 +17,12 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
 /**
  * Main mod class. Should be an `object` declaration annotated with `@Mod`.
  * The modid should be declared in this object and should match the modId entry
- * in mods.toml.
+ * in neoforge.mods.toml.
  *
  * An example for blocks is in the `blocks` package of this mod.
  */
 @Mod(ExampleMod.ID)
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 object ExampleMod {
     const val ID = "examplemod"
 

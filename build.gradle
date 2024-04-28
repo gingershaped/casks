@@ -5,9 +5,9 @@ plugins {
     id 'net.neoforged.gradle.userdev' version '7.0.+'
 
     // Adds the Kotlin Gradle plugin
-    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.23'
     // OPTIONAL Kotlin Serialization plugin
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.22'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.23'
 }
 
 version = mod_version
@@ -17,8 +17,8 @@ base {
     archivesName = mod_id
 }
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+// Mojang ships Java 21 to end users in 1.18+, so your mod should target Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 //minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 //minecraft.accessTransformers.entry public net.minecraft.client.Minecraft textureManager # textureManager
@@ -75,11 +75,11 @@ repositories {
     // NeoForged MDK includes mavenLocal by default
     mavenLocal()
     // REQUIRED for using Kotlin for Forge
-    maven {
+    /*maven {
         name = 'Kotlin for Forge'
         url = 'https://thedarkcolour.github.io/KotlinForForge/'
         content { includeGroup "thedarkcolour" }
-    }
+    }*/
 }
 
 dependencies {
@@ -87,7 +87,7 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     // Must use the '-neoforge' version on NeoForge. If on regular forge, omit the '-neoforge'
-    implementation 'thedarkcolour:kotlinforforge-neoforge:4.10.0'
+    implementation 'thedarkcolour:kotlinforforge-neoforge:5.0.0c'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -104,7 +104,7 @@ tasks.withType(ProcessResources).configureEach {
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
         expand replaceProperties + [project: project]
     }
 }
@@ -123,12 +123,8 @@ publishing {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
-
-// Kotlin for Forge targets Java 17; your mod should do the same
+// Kotlin for Forge targets Java 21; your mod should do the same
 compileKotlin {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "21"
 }
 
