@@ -1,10 +1,7 @@
-# IMPORTANT: Do not worry about syntax errors popping up about ${mod_id}. These are template strings which are handled by Gradle.
-
 # Make sure this is set to "kotlinforforge"
 modLoader="kotlinforforge"
 # Make sure this is set to the appropriate version range
 loaderVersion="${loader_version_range}"
-# License is REQUIRED after 1.16
 license='${mod_license}'
 
 [[mods]]
