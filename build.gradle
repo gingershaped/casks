@@ -4,7 +4,7 @@ plugins {
     id 'java-library'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '1.0.21'
+    id 'net.neoforged.moddev' version '2.0.107'
 
     // Adds the Kotlin Gradle plugin
     id 'org.jetbrains.kotlin.jvm' version '2.0.21'
@@ -74,7 +74,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
@@ -112,7 +112,7 @@ repositories {
 
 dependencies {
     // Must use the '-neoforge' version on NeoForge. If on regular Forge, omit the '-neoforge'
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.6.0'
+    implementation 'thedarkcolour:kotlinforforge-neoforge:5.9.0'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
