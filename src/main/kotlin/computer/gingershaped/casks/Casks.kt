@@ -1,6 +1,6 @@
-package example.examplemod
+package computer.gingershaped.casks
 
-import example.examplemod.block.ModBlocks
+import computer.gingershaped.casks.block.ModBlocks
 import net.minecraft.client.Minecraft
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -21,10 +21,10 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
  *
  * An example for blocks is in the `blocks` package of this mod.
  */
-@Mod(ExampleMod.ID)
+@Mod(Casks.ID)
 @EventBusSubscriber
-object ExampleMod {
-    const val ID = "examplemod"
+object Casks {
+    const val ID = "casks"
 
     // the logger for our mod
     val LOGGER: Logger = LogManager.getLogger(ID)
