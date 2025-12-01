@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "casks:block/birch_cask"
+    },
+    "open=true": {
+      "model": "casks:block/birch_cask_open"
+    }
+  }
+}

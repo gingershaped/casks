@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "casks:block/warped_cask"
+    },
+    "open=true": {
+      "model": "casks:block/warped_cask_open"
+    }
+  }
+}

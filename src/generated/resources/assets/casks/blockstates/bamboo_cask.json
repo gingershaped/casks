@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "casks:block/bamboo_cask"
+    },
+    "open=true": {
+      "model": "casks:block/bamboo_cask_open"
+    }
+  }
+}

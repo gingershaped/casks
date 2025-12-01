@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "casks:block/mangrove_cask"
+    },
+    "open=true": {
+      "model": "casks:block/mangrove_cask_open"
+    }
+  }
+}

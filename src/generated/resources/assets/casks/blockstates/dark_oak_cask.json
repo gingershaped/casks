@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "casks:block/dark_oak_cask"
+    },
+    "open=true": {
+      "model": "casks:block/dark_oak_cask_open"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+package computer.gingershaped.casks
+
+import computer.gingershaped.casks.content.CaskBlock
+import computer.gingershaped.casks.content.CaskMenu
+import computer.gingershaped.casks.content.CaskBlockEntity
+import net.minecraft.world.level.block.SoundType
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
+import net.minecraft.world.level.material.MapColor
+import net.neoforged.bus.api.IEventBus
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension
+import net.minecraft.core.registries.Registries as RegistryTypes
+import net.neoforged.neoforge.registries.DeferredRegister
+import thedarkcolour.kotlinforforge.neoforge.forge.getValue
+
+object CasksRegistries {
+    object Blocks {
+        val REGISTRY = DeferredRegister.createBlocks(Casks.ID)
+    }
+
+    object Items {
+        val REGISTRY = DeferredRegister.createItems(Casks.ID)
+    }
+
+    enum class CaskTypes(val mapColor: MapColor, val soundType: SoundType = SoundType.WOOD) {
+        ACACIA(MapColor.COLOR_ORANGE),
+        BAMBOO(MapColor.COLOR_YELLOW, SoundType.BAMBOO_WOOD),
+        BIRCH(MapColor.SAND),
+        CHERRY(MapColor.TERRACOTTA_WHITE, SoundType.CHERRY_WOOD),
+        CRIMSON(MapColor.CRIMSON_STEM, SoundType.NETHER_WOOD),
+        DARK_OAK(MapColor.COLOR_BROWN),
+        JUNGLE(MapColor.DIRT),
+        MANGROVE(MapColor.COLOR_RED),
+        OAK(MapColor.WOOD),
+        PALE_OAK(MapColor.QUARTZ),
+        SPRUCE(MapColor.PODZOL),
+        WARPED(MapColor.WARPED_STEM, SoundType.NETHER_WOOD)
+        ;
+
+        val id = this.name.lowercase() + "_cask"
+
+        private val deferredBlock = Blocks.REGISTRY.registerBlock(id, ::CaskBlock) { ->
+            BlockBehaviour.Properties.of()
+                .mapColor(mapColor)
+                .instrument(NoteBlockInstrument.BASS)
+                .strength(2.5F)
+                .sound(soundType)
+                .ignitedByLava()
+        }
+        val block by deferredBlock
+        val item by Items.REGISTRY.registerSimpleBlockItem(deferredBlock)
+
+
+    }
+
+    object BlockEntityTypes {
+        val REGISTRY = DeferredRegister.create(RegistryTypes.BLOCK_ENTITY_TYPE, Casks.ID)
+
+        val CASK by REGISTRY.register("cask") { ->
+            BlockEntityType(
+                ::CaskBlockEntity,
+                CaskTypes.entries.map { it.block }.toSet()
+            )
+        }
+    }
+
+
+    object MenuTypes {
+        val REGISTRY = DeferredRegister.create(RegistryTypes.MENU, Casks.ID)
+
+        val CASK by REGISTRY.register("cask") { -> IMenuTypeExtension.create(::CaskMenu) }
+    }
+
+    fun register(bus: IEventBus) {
+        // make sure the entry classes get loaded
+        CaskTypes.entries
+
+        Blocks.REGISTRY.register(bus)
+        Items.REGISTRY.register(bus)
+        BlockEntityTypes.REGISTRY.register(bus)
+        MenuTypes.REGISTRY.register(bus)
+    }
+}

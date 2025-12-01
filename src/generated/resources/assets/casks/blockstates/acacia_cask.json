@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "casks:block/acacia_cask"
+    },
+    "open=true": {
+      "model": "casks:block/acacia_cask_open"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "casks:block/cask_closed",
+  "textures": {
+    "all": "casks:block/crimson_cask"
+  }
+}

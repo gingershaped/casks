@@ -1,0 +1,6 @@
+{
+  "parent": "casks:block/cask_open",
+  "textures": {
+    "all": "casks:block/bamboo_cask"
+  }
+}
