@@ -69,7 +69,7 @@ object CasksRegistries {
     object MenuTypes {
         val REGISTRY = DeferredRegister.create(RegistryTypes.MENU, Casks.ID)
 
-        val CASK by REGISTRY.register("cask") { -> IMenuTypeExtension.create(::CaskMenu) }
+        val CASK by REGISTRY.register("cask") { -> IMenuTypeExtension.create(CaskMenu::client) }
     }
 
     fun register(bus: IEventBus) {
