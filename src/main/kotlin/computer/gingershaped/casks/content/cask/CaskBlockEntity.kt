@@ -1,6 +1,7 @@
-package computer.gingershaped.casks.content
+package computer.gingershaped.casks.content.cask
 
 import computer.gingershaped.casks.CasksRegistries
+import computer.gingershaped.casks.content.CasksTags
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponentMap
@@ -25,6 +26,7 @@ import net.minecraft.world.level.storage.ValueOutput
 import net.neoforged.neoforge.transfer.item.ItemResource
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler
 import net.neoforged.neoforge.transfer.transaction.Transaction
+import kotlin.collections.iterator
 
 class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegistries.BlockEntityTypes.CASK, pos, state),
     MenuProvider {

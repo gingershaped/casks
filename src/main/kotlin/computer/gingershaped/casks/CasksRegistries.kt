@@ -1,10 +1,9 @@
 package computer.gingershaped.casks
 
-import computer.gingershaped.casks.content.CaskBlock
-import computer.gingershaped.casks.content.CaskMenu
-import computer.gingershaped.casks.content.CaskBlockEntity
+import computer.gingershaped.casks.content.cask.CaskBlock
+import computer.gingershaped.casks.content.cask.CaskMenu
+import computer.gingershaped.casks.content.cask.CaskBlockEntity
 import net.minecraft.core.component.DataComponents
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.component.ItemContainerContents
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks as VanillaBlocks

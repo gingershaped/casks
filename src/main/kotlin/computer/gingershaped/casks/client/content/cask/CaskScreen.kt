@@ -1,7 +1,7 @@
-package computer.gingershaped.casks.client
+package computer.gingershaped.casks.client.content.cask
 
 import computer.gingershaped.casks.Casks
-import computer.gingershaped.casks.content.CaskMenu
+import computer.gingershaped.casks.content.cask.CaskMenu
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.renderer.RenderPipelines

@@ -1,6 +1,7 @@
 package computer.gingershaped.casks.client
 
 import computer.gingershaped.casks.CasksRegistries
+import computer.gingershaped.casks.client.content.cask.CaskScreen
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber

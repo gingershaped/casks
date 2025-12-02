@@ -1,4 +1,4 @@
-package computer.gingershaped.casks.content
+package computer.gingershaped.casks.content.cask
 
 import com.mojang.serialization.MapCodec
 import computer.gingershaped.casks.CasksRegistries

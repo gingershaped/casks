@@ -1,4 +1,4 @@
-package computer.gingershaped.casks.content
+package computer.gingershaped.casks.content.cask
 
 import computer.gingershaped.casks.CasksRegistries
 import net.minecraft.core.registries.Registries
@@ -9,10 +9,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ContainerLevelAccess
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter
 import net.neoforged.neoforge.transfer.StacksResourceHandler
 import net.neoforged.neoforge.transfer.item.ItemResource
-import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot
 
 class CaskMenu private constructor(
