@@ -3,6 +3,7 @@ package computer.gingershaped.casks
 import computer.gingershaped.casks.content.cask.CaskBlock
 import computer.gingershaped.casks.content.cask.CaskMenu
 import computer.gingershaped.casks.content.cask.CaskBlockEntity
+import computer.gingershaped.casks.content.cask.CaskBlockItem
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.component.ItemContainerContents
 import net.minecraft.world.level.block.Block
@@ -53,10 +54,11 @@ object CasksRegistries {
                 .ignitedByLava()
         }
 
-        val item by Items.REGISTRY.registerSimpleBlockItem(id, { block }) { properties ->
+        val item by Items.REGISTRY.registerItem(id, { properties -> CaskBlockItem(block, properties) }) { properties ->
             properties
                 .stacksTo(1)
                 .component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+                .useBlockDescriptionPrefix()
         }
     }
 

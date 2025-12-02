@@ -38,11 +38,7 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
         }
 
         override fun isValid(index: Int, resource: ItemResource) =
-            resource.test {
-                it.canFitInsideContainerItems()
-                        && !it.`is`(CasksTags.CASK_ITEMS)
-                        && !it.`is`(ItemTags.SHULKER_BOXES)
-            }
+            resource.test { it.canFitInsideContainerItems() }
     }
 
     val inventory = ResourceHandler(this)
