@@ -6,6 +6,8 @@ import computer.gingershaped.casks.content.CaskBlockEntity
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.component.ItemContainerContents
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks as VanillaBlocks
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
@@ -26,19 +28,19 @@ object CasksRegistries {
         val REGISTRY = DeferredRegister.createItems(Casks.ID)
     }
 
-    enum class CaskTypes(val mapColor: MapColor, val soundType: SoundType = SoundType.WOOD) {
-        ACACIA(MapColor.COLOR_ORANGE),
-        BAMBOO(MapColor.COLOR_YELLOW, SoundType.BAMBOO_WOOD),
-        BIRCH(MapColor.SAND),
-        CHERRY(MapColor.TERRACOTTA_WHITE, SoundType.CHERRY_WOOD),
-        CRIMSON(MapColor.CRIMSON_STEM, SoundType.NETHER_WOOD),
-        DARK_OAK(MapColor.COLOR_BROWN),
-        JUNGLE(MapColor.DIRT),
-        MANGROVE(MapColor.COLOR_RED),
-        OAK(MapColor.WOOD),
-        PALE_OAK(MapColor.QUARTZ),
-        SPRUCE(MapColor.PODZOL),
-        WARPED(MapColor.WARPED_STEM, SoundType.NETHER_WOOD)
+    enum class CaskTypes(val mapColor: MapColor, val slab: Block, val soundType: SoundType = SoundType.WOOD) {
+        ACACIA(MapColor.COLOR_ORANGE, VanillaBlocks.ACACIA_SLAB),
+        BAMBOO(MapColor.COLOR_YELLOW, VanillaBlocks.BAMBOO_SLAB, SoundType.BAMBOO_WOOD),
+        BIRCH(MapColor.SAND, VanillaBlocks.BIRCH_SLAB),
+        CHERRY(MapColor.TERRACOTTA_WHITE, VanillaBlocks.CHERRY_SLAB, SoundType.CHERRY_WOOD),
+        CRIMSON(MapColor.CRIMSON_STEM, VanillaBlocks.CRIMSON_SLAB, SoundType.NETHER_WOOD),
+        DARK_OAK(MapColor.COLOR_BROWN, VanillaBlocks.DARK_OAK_SLAB),
+        JUNGLE(MapColor.DIRT, VanillaBlocks.JUNGLE_SLAB),
+        MANGROVE(MapColor.COLOR_RED, VanillaBlocks.MANGROVE_SLAB),
+        OAK(MapColor.WOOD, VanillaBlocks.OAK_SLAB),
+        PALE_OAK(MapColor.QUARTZ, VanillaBlocks.PALE_OAK_SLAB),
+        SPRUCE(MapColor.PODZOL, VanillaBlocks.SPRUCE_SLAB),
+        WARPED(MapColor.WARPED_STEM, VanillaBlocks.WARPED_SLAB, SoundType.NETHER_WOOD)
         ;
 
         val id = this.name.lowercase() + "_cask"

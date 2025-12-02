@@ -28,7 +28,7 @@ class CaskMenu private constructor(
         fun client(containerId: Int, playerInventory: Inventory, data: RegistryFriendlyByteBuf) = CaskMenu(
             containerId,
             playerInventory,
-            ItemStacksResourceHandler(SLOTS),
+            CaskBlockEntity.ResourceHandler(null),
             data.registryAccess().let { access ->
                 val key = data.readResourceKey(Registries.BLOCK)
 

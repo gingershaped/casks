@@ -1,0 +1,16 @@
+{
+  "values": [
+    "casks:acacia_cask",
+    "casks:bamboo_cask",
+    "casks:birch_cask",
+    "casks:cherry_cask",
+    "casks:crimson_cask",
+    "casks:dark_oak_cask",
+    "casks:jungle_cask",
+    "casks:mangrove_cask",
+    "casks:oak_cask",
+    "casks:pale_oak_cask",
+    "casks:spruce_cask",
+    "casks:warped_cask"
+  ]
+}

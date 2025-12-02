@@ -27,7 +27,9 @@ object EventHandlers {
 
     @SubscribeEvent
     private fun gatherData(event: GatherDataEvent.Client) {
-        event.createProvider(::CasksModelProvider)
-        event.createProvider(::CasksLootTableProvider)
+        event.createProvider(::CaskModelProvider)
+        event.createProvider(::CaskLootTableProvider)
+        event.createBlockAndItemTags(::CaskBlockTagsProvider, ::CaskItemTagsProvider)
+        event.createProvider(CaskRecipeProvider::Runner)
     }
 }

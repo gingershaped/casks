@@ -1,5 +1,6 @@
 package computer.gingershaped.casks
 
+import computer.gingershaped.casks.content.CasksTags
 import net.minecraft.client.data.models.BlockModelGenerators
 import net.minecraft.client.data.models.ItemModelGenerators
 import net.minecraft.client.data.models.ModelProvider
@@ -13,8 +14,15 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.data.PackOutput
 import net.minecraft.data.loot.BlockLootSubProvider
 import net.minecraft.data.loot.LootTableProvider
+import net.minecraft.data.recipes.RecipeCategory
+import net.minecraft.data.recipes.RecipeOutput
+import net.minecraft.data.recipes.RecipeProvider
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.BlockTags
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.flag.FeatureFlags
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
@@ -23,9 +31,11 @@ import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue
+import net.neoforged.neoforge.common.data.BlockTagCopyingItemTagProvider
+import net.neoforged.neoforge.common.data.BlockTagsProvider
 import java.util.concurrent.CompletableFuture
 
-class CasksModelProvider(output: PackOutput) : ModelProvider(output, Casks.ID) {
+class CaskModelProvider(output: PackOutput) : ModelProvider(output, Casks.ID) {
     val closedCaskProvider = caskProvider(ResourceLocation.fromNamespaceAndPath(Casks.ID, "block/cask_closed"))
     val openCaskProvider = caskProvider(ResourceLocation.fromNamespaceAndPath(Casks.ID, "block/cask_open"))
 
@@ -55,7 +65,7 @@ class CasksModelProvider(output: PackOutput) : ModelProvider(output, Casks.ID) {
     }
 }
 
-class CasksLootTableProvider(output: PackOutput, lookupProvider: CompletableFuture<HolderLookup.Provider>) :
+class CaskLootTableProvider(output: PackOutput, lookupProvider: CompletableFuture<HolderLookup.Provider>) :
     LootTableProvider(
         output, emptySet(), listOf(
             SubProviderEntry(::BlockLoot, LootContextParamSets.BLOCK)
@@ -84,5 +94,56 @@ class CasksLootTableProvider(output: PackOutput, lookupProvider: CompletableFutu
             }
         }
 
+    }
+}
+
+class CaskBlockTagsProvider(output: PackOutput, lookupProvider: CompletableFuture<HolderLookup.Provider>)
+    : BlockTagsProvider(output, lookupProvider, Casks.ID) {
+
+    override fun addTags(lookupProvider: HolderLookup.Provider) {
+        for (cask in CasksRegistries.CaskTypes.entries) {
+            tag(BlockTags.MINEABLE_WITH_AXE).add(cask.block)
+            tag(CasksTags.CASK_BLOCKS).add(cask.block)
+        }
+    }
+}
+
+class CaskItemTagsProvider(
+    output: PackOutput,
+    lookupProvider: CompletableFuture<HolderLookup.Provider>,
+    blockTags: CompletableFuture<TagLookup<Block>>
+) : BlockTagCopyingItemTagProvider(output, lookupProvider, blockTags, Casks.ID) {
+
+    override fun addTags(provider: HolderLookup.Provider) {
+        copy(CasksTags.CASK_BLOCKS, CasksTags.CASK_ITEMS)
+    }
+}
+
+class CaskRecipeProvider(lookupProvider: HolderLookup.Provider, output: RecipeOutput)
+    : RecipeProvider(lookupProvider, output) {
+
+    override fun buildRecipes() {
+        for (cask in CasksRegistries.CaskTypes.entries) {
+            shaped(RecipeCategory.DECORATIONS, cask.block)
+                .define('S', Items.STRING)
+                .define('F', Items.FLOWER_POT)
+                .define('L', cask.slab)
+                .pattern("S S")
+                .pattern("FFF")
+                .pattern("LLL")
+                .unlockedBy("has_planks", has(ItemTags.PLANKS))
+                .unlockedBy("has_wood_slab", has(ItemTags.WOODEN_SLABS))
+                .group("casks")
+                .save(output)
+        }
+    }
+
+    class Runner(output: PackOutput, lookupProvider: CompletableFuture<HolderLookup.Provider>)
+        : RecipeProvider.Runner(output, lookupProvider) {
+
+        override fun createRecipeProvider(lookupProvider: HolderLookup.Provider, output: RecipeOutput) =
+            CaskRecipeProvider(lookupProvider, output)
+
+        override fun getName() = "Casks recipes"
     }
 }

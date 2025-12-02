@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "casks",
+  "key": {
+    "F": "minecraft:flower_pot",
+    "L": "minecraft:warped_slab",
+    "S": "minecraft:string"
+  },
+  "pattern": [
+    "S S",
+    "FFF",
+    "LLL"
+  ],
+  "result": {
+    "count": 1,
+    "id": "casks:warped_cask"
+  }
+}

@@ -2,7 +2,6 @@ package computer.gingershaped.casks.content
 
 import computer.gingershaped.casks.CasksRegistries
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponents
@@ -10,15 +9,14 @@ import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.inventory.ContainerLevelAccess
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemContainerContents
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.BarrelBlock
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter
 import net.minecraft.world.level.block.state.BlockState
@@ -32,11 +30,20 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
     MenuProvider {
     private var customName: Component? = null
 
-    val inventory = object : ItemStacksResourceHandler(CaskMenu.SLOTS) {
+    class ResourceHandler(val blockEntity: CaskBlockEntity?) : ItemStacksResourceHandler(CaskMenu.SLOTS) {
         override fun onContentsChanged(index: Int, previousContents: ItemStack) {
-            setChanged()
+            blockEntity?.setChanged()
         }
+
+        override fun isValid(index: Int, resource: ItemResource) =
+            resource.test {
+                it.canFitInsideContainerItems()
+                        && !it.`is`(CasksTags.CASK_ITEMS)
+                        && !it.`is`(ItemTags.SHULKER_BOXES)
+            }
     }
+
+    val inventory = ResourceHandler(this)
 
     val openersCounter = object : ContainerOpenersCounter() {
         override fun onOpen(
