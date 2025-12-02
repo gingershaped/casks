@@ -3,9 +3,11 @@ package computer.gingershaped.casks.content.cask
 import com.mojang.serialization.MapCodec
 import computer.gingershaped.casks.CasksRegistries
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.BlockHitResult
@@ -95,5 +98,28 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
 
         return super.getDrops(state, updatedParams)
     }
+
+    override fun hasAnalogOutputSignal(state: BlockState) = true
+
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
+        val blockEntity = level.getBlockEntity(pos, CasksRegistries.BlockEntityTypes.CASK).get()
+
+        var signal = 0F
+        with(blockEntity.inventory) {
+            for (index in 0..<size()) {
+                val contents = getResource(index)
+                val amount = getAmountAsLong(index)
+                val capacity = getCapacityAsLong(index, contents)
+                println("$amount $capacity")
+
+                signal += amount / capacity
+            }
+
+            signal /= size()
+        }
+        return Mth.lerpDiscrete(signal, 0, 15)
+    }
+
+    override fun isPathfindable(state: BlockState, pathComputationType: PathComputationType) = false
 }
 
