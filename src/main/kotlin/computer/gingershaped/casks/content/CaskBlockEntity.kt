@@ -3,6 +3,9 @@ package computer.gingershaped.casks.content
 import computer.gingershaped.casks.CasksRegistries
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponentGetter
+import net.minecraft.core.component.DataComponentMap
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -13,6 +16,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ContainerLevelAccess
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.ItemContainerContents
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BarrelBlock
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -20,11 +24,15 @@ import net.minecraft.world.level.block.entity.ContainerOpenersCounter
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.neoforged.neoforge.transfer.item.ItemResource
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler
+import net.neoforged.neoforge.transfer.transaction.Transaction
 
 class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegistries.BlockEntityTypes.CASK, pos, state),
     MenuProvider {
-    val inventory = object : ItemStacksResourceHandler(3) {
+    private var customName: Component? = null
+
+    val inventory = object : ItemStacksResourceHandler(CaskMenu.SLOTS) {
         override fun onContentsChanged(index: Int, previousContents: ItemStack) {
             setChanged()
         }
@@ -95,6 +103,8 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
         }
     }
 
+    fun isEmpty() = inventory.copyToList().all { it.isEmpty }
+
     override fun saveAdditional(output: ValueOutput) {
         super.saveAdditional(output)
         inventory.serialize(output)
@@ -105,13 +115,34 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
         inventory.deserialize(input)
     }
 
-    override fun getDisplayName(): Component {
-        return Component.literal("placeholder")
-    }
+    override fun getDisplayName() = customName ?: blockState.block.name
 
     override fun createMenu(
         containerId: Int,
         playerInventory: Inventory,
         player: Player
     ): AbstractContainerMenu = CaskMenu.server(containerId, playerInventory, this)
+
+    override fun applyImplicitComponents(componentGetter: DataComponentGetter) {
+        super.applyImplicitComponents(componentGetter)
+
+        customName = componentGetter.get(DataComponents.CUSTOM_NAME)
+
+        Transaction.openRoot().use { transaction ->
+            val contents = componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+
+            for ((index, stack) in contents.stream().iterator().withIndex()) {
+                inventory.insert(index, ItemResource.of(stack), stack.count, transaction)
+            }
+
+            transaction.commit()
+        }
+    }
+
+    override fun collectImplicitComponents(components: DataComponentMap.Builder) {
+        super.collectImplicitComponents(components)
+
+        components.set(DataComponents.CUSTOM_NAME, customName)
+        components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(inventory.copyToList()))
+    }
 }

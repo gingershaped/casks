@@ -4,9 +4,12 @@ import com.mojang.serialization.MapCodec
 import computer.gingershaped.casks.CasksRegistries
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseEntityBlock
@@ -15,6 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 
@@ -23,6 +28,7 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
         val OPEN = BlockStateProperties.OPEN
         val CODEC = simpleCodec(::CaskBlock)
         val SHAPE = column(8.0, 0.0, 8.0)
+        val CONTENTS: ResourceLocation = ResourceLocation.withDefaultNamespace("contents")
     }
 
     init {
@@ -60,5 +66,34 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
         return InteractionResult.SUCCESS
     }
 
+    override fun playerWillDestroy(level: Level, pos: BlockPos, state: BlockState, player: Player): BlockState {
+        level.getBlockEntity(pos, CasksRegistries.BlockEntityTypes.CASK).ifPresent { blockEntity ->
+            if (!level.isClientSide && player.preventsBlockDrops() && !blockEntity.isEmpty()) {
+                val itemStack = ItemStack(state.block.asItem())
+                itemStack.applyComponents(blockEntity.collectComponents())
+                val itemEntity =
+                    ItemEntity(level, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, itemStack)
+                itemEntity.setDefaultPickUpDelay()
+                level.addFreshEntity(itemEntity)
+            }
+        }
+
+        return super.playerWillDestroy(level, pos, state, player)
+    }
+
+    override fun getDrops(state: BlockState, params: LootParams.Builder): List<ItemStack?> {
+        var updatedParams = params
+        val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
+        
+        if (blockEntity is CaskBlockEntity) {
+            updatedParams = params.withDynamicDrop(CONTENTS) { drops ->
+                for (stack in blockEntity.inventory.copyToList()) {
+                    drops.accept(stack)
+                }
+            }
+        }
+
+        return super.getDrops(state, updatedParams)
+    }
 }
 

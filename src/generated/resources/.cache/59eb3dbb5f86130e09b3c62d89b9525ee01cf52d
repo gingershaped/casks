@@ -1,0 +1,13 @@
+// 1.21.10	2025-12-01T21:53:52.577195234	Loot Tables
+e7eaba29ee2cbfdbd523cdddf13ccbbd19557a2a data/casks/loot_table/blocks/acacia_cask.json
+bd82403f683f74f906613b9c98baba89cac50f42 data/casks/loot_table/blocks/bamboo_cask.json
+0157da4d3a84936c549fa7c98b1f3545c005a9af data/casks/loot_table/blocks/birch_cask.json
+e0a5f452dc1de680db6eeb96f46204b7335ad2de data/casks/loot_table/blocks/cherry_cask.json
+3b4855e00841500f35dd8d4763eb7cabd2bbee6e data/casks/loot_table/blocks/crimson_cask.json
+7bbd80f27f6c08f8facdf8e6f2304913d5a54a17 data/casks/loot_table/blocks/dark_oak_cask.json
+2cc685753d1d2ce82d07cfe4f233d185beb54b15 data/casks/loot_table/blocks/jungle_cask.json
+389aba02740a331533b8af5b96674ee58130cd6f data/casks/loot_table/blocks/mangrove_cask.json
+61bcbd33912ed609e0f1ceea11a3aaeb41732b5a data/casks/loot_table/blocks/oak_cask.json
+87b64e9d06160fa7df7aa1ce7af6d4d2fdeb481d data/casks/loot_table/blocks/pale_oak_cask.json
+ba54eaa7925982a0af4c08f3eb396f153ee353f2 data/casks/loot_table/blocks/spruce_cask.json
+6d625aa717617fe9dae7baafd4eb55fe4f43db07 data/casks/loot_table/blocks/warped_cask.json

@@ -5,6 +5,7 @@ import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
+import net.neoforged.neoforge.data.event.GatherDataEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 
 @EventBusSubscriber
@@ -22,5 +23,11 @@ object EventHandlers {
             Capabilities.Item.BLOCK,
             CasksRegistries.BlockEntityTypes.CASK
         ) { be, _ -> be.inventory }
+    }
+
+    @SubscribeEvent
+    private fun gatherData(event: GatherDataEvent.Client) {
+        event.createProvider(::CasksModelProvider)
+        event.createProvider(::CasksLootTableProvider)
     }
 }

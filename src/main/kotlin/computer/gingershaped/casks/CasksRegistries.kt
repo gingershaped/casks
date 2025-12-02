@@ -3,6 +3,9 @@ package computer.gingershaped.casks
 import computer.gingershaped.casks.content.CaskBlock
 import computer.gingershaped.casks.content.CaskMenu
 import computer.gingershaped.casks.content.CaskBlockEntity
+import net.minecraft.core.component.DataComponents
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.component.ItemContainerContents
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
@@ -40,7 +43,7 @@ object CasksRegistries {
 
         val id = this.name.lowercase() + "_cask"
 
-        private val deferredBlock = Blocks.REGISTRY.registerBlock(id, ::CaskBlock) { ->
+        val block by Blocks.REGISTRY.registerBlock(id, ::CaskBlock) { ->
             BlockBehaviour.Properties.of()
                 .mapColor(mapColor)
                 .instrument(NoteBlockInstrument.BASS)
@@ -48,10 +51,12 @@ object CasksRegistries {
                 .sound(soundType)
                 .ignitedByLava()
         }
-        val block by deferredBlock
-        val item by Items.REGISTRY.registerSimpleBlockItem(deferredBlock)
 
-
+        val item by Items.REGISTRY.registerSimpleBlockItem(id, { block }) { properties ->
+            properties
+                .stacksTo(1)
+                .component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+        }
     }
 
     object BlockEntityTypes {
