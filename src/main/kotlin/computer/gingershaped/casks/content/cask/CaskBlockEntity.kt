@@ -155,6 +155,7 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
                     }
                     transaction.commit()
                 }
+                break
             }
         }
 
