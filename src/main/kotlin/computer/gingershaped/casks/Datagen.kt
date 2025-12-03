@@ -1,11 +1,11 @@
 package computer.gingershaped.casks
 
 import computer.gingershaped.casks.content.CasksTags
+import computer.gingershaped.casks.content.cask.CaskBlock
 import net.minecraft.client.data.models.BlockModelGenerators
 import net.minecraft.client.data.models.ItemModelGenerators
 import net.minecraft.client.data.models.ModelProvider
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator
-import net.minecraft.client.data.models.blockstates.PropertyDispatch
+import net.minecraft.client.data.models.blockstates.MultiPartGenerator
 import net.minecraft.client.data.models.model.ModelTemplates
 import net.minecraft.client.data.models.model.TextureMapping
 import net.minecraft.client.data.models.model.TexturedModel
@@ -23,7 +23,6 @@ import net.minecraft.tags.ItemTags
 import net.minecraft.world.flag.FeatureFlags
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.entries.LootItem
@@ -52,13 +51,27 @@ class CaskModelProvider(output: PackOutput) : ModelProvider(output, Casks.ID) {
                 val open = openCaskProvider.createWithSuffix(
                     cask.block, "_open", modelOutput
                 )
+                val frame = ResourceLocation.fromNamespaceAndPath(Casks.ID, "block/cask_frame")
 
                 blockStateOutput.accept(
-                    MultiVariantGenerator.dispatch(cask.block).with(
-                        PropertyDispatch.initial(BlockStateProperties.OPEN)
-                            .select(false, BlockModelGenerators.plainVariant(closed))
-                            .select(true, BlockModelGenerators.plainVariant(open))
-                    )
+                    MultiPartGenerator.multiPart(cask.block)
+                        .with(
+                            BlockModelGenerators.condition().term(CaskBlock.OPEN, true),
+                            BlockModelGenerators.plainVariant(open)
+                        )
+                        .with(
+                            BlockModelGenerators.condition().term(CaskBlock.OPEN, false),
+                            BlockModelGenerators.plainVariant(closed)
+                        )
+                        .with(
+                            BlockModelGenerators.condition().term(CaskBlock.ABOVE_CAMPFIRE, true),
+                            BlockModelGenerators.plainVariant(frame)
+                        )
+//                    MultiVariantGenerator.dispatch(cask.block).with(
+//                        PropertyDispatch.initial(BlockStateProperties.OPEN)
+//                            .select(false, BlockModelGenerators.plainVariant(closed))
+//                            .select(true, BlockModelGenerators.plainVariant(open))
+//                    )
                 )
             }
         }

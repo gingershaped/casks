@@ -8,18 +8,26 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.Mth
+import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.ScheduledTickAccess
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.entity.CampfireBlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
@@ -28,18 +36,56 @@ import net.minecraft.world.phys.shapes.CollisionContext
 
 class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
     companion object {
-        val OPEN = BlockStateProperties.OPEN
         val CODEC = simpleCodec(::CaskBlock)
         val SHAPE = column(8.0, 0.0, 8.0)
         val CONTENTS: ResourceLocation = ResourceLocation.withDefaultNamespace("contents")
+
+        val OPEN = BlockStateProperties.OPEN
+        val ABOVE_CAMPFIRE = BooleanProperty.create("above_campfire")
     }
 
     init {
-        registerDefaultState(stateDefinition.any().setValue(OPEN, false))
+        registerDefaultState(
+            stateDefinition.any()
+                .setValue(OPEN, false)
+                .setValue(ABOVE_CAMPFIRE, false)
+        )
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block?, BlockState?>) {
-        builder.add(OPEN)
+        builder.add(OPEN).add(ABOVE_CAMPFIRE)
+    }
+
+    override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
+        return super.getStateForPlacement(context)
+            ?.setValue(ABOVE_CAMPFIRE, campfireBelowPos(context.level, context.clickedPos) != null)
+    }
+
+    override fun updateShape(
+        state: BlockState,
+        level: LevelReader,
+        scheduledTickAccess: ScheduledTickAccess,
+        pos: BlockPos,
+        direction: Direction,
+        neighborPos: BlockPos,
+        neighborState: BlockState,
+        random: RandomSource
+    ): BlockState {
+        if (direction == Direction.DOWN) {
+            return state.setValue(ABOVE_CAMPFIRE, campfireBelowPos(level, pos) != null)
+        }
+
+        return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random)
+    }
+
+    fun campfireBelowPos(level: LevelReader, pos: BlockPos): CampfireBlockEntity? {
+        val blockEntity = level.getBlockEntity(pos.below())
+
+        if (blockEntity is CampfireBlockEntity) {
+            return blockEntity
+        }
+
+        return null
     }
 
     override fun newBlockEntity(
@@ -121,5 +167,21 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
     }
 
     override fun isPathfindable(state: BlockState, pathComputationType: PathComputationType) = false
+
+    override fun <T : BlockEntity?> getTicker(
+        level: Level,
+        state: BlockState,
+        blockEntityType: BlockEntityType<T?>
+    ): BlockEntityTicker<T?>? {
+        return if (state.getValue(ABOVE_CAMPFIRE)) {
+            createTickerHelper(
+                blockEntityType,
+                CasksRegistries.BlockEntityTypes.CASK,
+                CaskBlockEntity::campfireTransferTick
+            )
+        } else {
+            null
+        }
+    }
 }
 

@@ -1,10 +1,28 @@
 {
-  "variants": {
-    "open=false": {
-      "model": "casks:block/spruce_cask"
+  "multipart": [
+    {
+      "apply": {
+        "model": "casks:block/spruce_cask_open"
+      },
+      "when": {
+        "open": "true"
+      }
     },
-    "open=true": {
-      "model": "casks:block/spruce_cask_open"
+    {
+      "apply": {
+        "model": "casks:block/spruce_cask"
+      },
+      "when": {
+        "open": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "casks:block/cask_frame"
+      },
+      "when": {
+        "above_campfire": "true"
+      }
     }
-  }
+  ]
 }

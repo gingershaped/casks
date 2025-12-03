@@ -1,10 +1,28 @@
 {
-  "variants": {
-    "open=false": {
-      "model": "casks:block/birch_cask"
+  "multipart": [
+    {
+      "apply": {
+        "model": "casks:block/birch_cask_open"
+      },
+      "when": {
+        "open": "true"
+      }
     },
-    "open=true": {
-      "model": "casks:block/birch_cask_open"
+    {
+      "apply": {
+        "model": "casks:block/birch_cask"
+      },
+      "when": {
+        "open": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "casks:block/cask_frame"
+      },
+      "when": {
+        "above_campfire": "true"
+      }
     }
-  }
+  ]
 }
