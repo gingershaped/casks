@@ -1,13 +1,12 @@
 package computer.gingershaped.casks
 
 import computer.gingershaped.casks.content.cask.CaskBlock
-import computer.gingershaped.casks.content.cask.CaskMenu
 import computer.gingershaped.casks.content.cask.CaskBlockEntity
 import computer.gingershaped.casks.content.cask.CaskBlockItem
+import computer.gingershaped.casks.content.cask.CaskMenu
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.component.ItemContainerContents
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks as VanillaBlocks
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
@@ -15,9 +14,10 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import net.minecraft.world.level.material.MapColor
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension
-import net.minecraft.core.registries.Registries as RegistryTypes
 import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
+import net.minecraft.core.registries.Registries as RegistryTypes
+import net.minecraft.world.level.block.Blocks as VanillaBlocks
 
 object CasksRegistries {
     object Blocks {
@@ -49,7 +49,7 @@ object CasksRegistries {
             BlockBehaviour.Properties.of()
                 .mapColor(mapColor)
                 .instrument(NoteBlockInstrument.BASS)
-                .strength(2.5F)
+                .strength(1F)
                 .sound(soundType)
                 .ignitedByLava()
         }
