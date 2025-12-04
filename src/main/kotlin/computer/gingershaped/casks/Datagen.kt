@@ -67,11 +67,6 @@ class CaskModelProvider(output: PackOutput) : ModelProvider(output, Casks.ID) {
                             BlockModelGenerators.condition().term(CaskBlock.ABOVE_CAMPFIRE, true),
                             BlockModelGenerators.plainVariant(frame)
                         )
-//                    MultiVariantGenerator.dispatch(cask.block).with(
-//                        PropertyDispatch.initial(BlockStateProperties.OPEN)
-//                            .select(false, BlockModelGenerators.plainVariant(closed))
-//                            .select(true, BlockModelGenerators.plainVariant(open))
-//                    )
                 )
             }
         }
