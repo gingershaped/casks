@@ -175,9 +175,8 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWat
                 val contents = getResource(index)
                 val amount = getAmountAsLong(index)
                 val capacity = getCapacityAsLong(index, contents)
-                println("$amount $capacity")
 
-                signal += amount / capacity
+                signal += amount.toFloat() / capacity.toFloat()
             }
 
             signal /= size()
