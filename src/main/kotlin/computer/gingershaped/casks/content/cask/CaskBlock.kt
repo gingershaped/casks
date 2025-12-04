@@ -20,6 +20,7 @@ import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ScheduledTickAccess
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.SimpleWaterloggedBlock
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -28,19 +29,21 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
+import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 
-class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
+class CaskBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock {
     companion object {
         val CODEC = simpleCodec(::CaskBlock)
         val SHAPE = column(8.0, 0.0, 8.0)
         val CONTENTS: ResourceLocation = ResourceLocation.withDefaultNamespace("contents")
 
         val OPEN = BlockStateProperties.OPEN
+        val WATERLOGGED = BlockStateProperties.WATERLOGGED
         val ABOVE_CAMPFIRE = BooleanProperty.create("above_campfire")
     }
 
@@ -48,16 +51,21 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
         registerDefaultState(
             stateDefinition.any()
                 .setValue(OPEN, false)
+                .setValue(WATERLOGGED, false)
                 .setValue(ABOVE_CAMPFIRE, false)
         )
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block?, BlockState?>) {
-        builder.add(OPEN).add(ABOVE_CAMPFIRE)
+        builder
+            .add(OPEN)
+            .add(WATERLOGGED)
+            .add(ABOVE_CAMPFIRE)
     }
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         return super.getStateForPlacement(context)
+            ?.setValue(WATERLOGGED, context.level.getFluidState(context.clickedPos).`is`(Fluids.WATER))
             ?.setValue(ABOVE_CAMPFIRE, campfireBelowPos(context.level, context.clickedPos) != null)
     }
 
@@ -71,12 +79,23 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties) {
         neighborState: BlockState,
         random: RandomSource
     ): BlockState {
+        if (state.getValue(WATERLOGGED)) {
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        }
+
         if (direction == Direction.DOWN) {
             return state.setValue(ABOVE_CAMPFIRE, campfireBelowPos(level, pos) != null)
         }
 
         return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random)
     }
+
+    override fun getFluidState(state: BlockState) =
+        if (state.getValue(WATERLOGGED)) {
+            Fluids.WATER.getSource(false)
+        } else {
+            super.getFluidState(state)
+        }
 
     fun campfireBelowPos(level: LevelReader, pos: BlockPos): CampfireBlockEntity? {
         val blockEntity = level.getBlockEntity(pos.below())
