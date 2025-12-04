@@ -3,6 +3,8 @@ modLoader="kotlinforforge"
 # Make sure this is set to the appropriate version range
 loaderVersion="${loader_version_range}"
 license='${mod_license}'
+issueTrackerURL="https://github.com/gingershaped/casks/issues"
+
 
 [[mods]]
 modId="${mod_id}"
@@ -11,6 +13,7 @@ displayName="${mod_name}"
 credits="Thanks Sock :3"
 authors="${mod_authors}"
 description='''${mod_description}'''
+logoFile="logo.png"
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
