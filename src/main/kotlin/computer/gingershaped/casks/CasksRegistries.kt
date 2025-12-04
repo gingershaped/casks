@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import net.minecraft.world.level.material.MapColor
+import net.minecraft.world.level.material.PushReaction
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension
 import net.neoforged.neoforge.registries.DeferredRegister
@@ -52,6 +53,7 @@ object CasksRegistries {
                 .strength(1F)
                 .sound(soundType)
                 .ignitedByLava()
+                .pushReaction(PushReaction.DESTROY)
         }
 
         val item by Items.REGISTRY.registerItem(id, { properties -> CaskBlockItem(block, properties) }) { properties ->
