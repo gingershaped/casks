@@ -15,7 +15,7 @@ import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot
 
 class CaskMenu private constructor(
     containerId: Int,
-    val playerInventory: Inventory,
+    playerInventory: Inventory,
     val caskInventory: StacksResourceHandler<ItemStack, ItemResource>,
     val attachedBlock: Block,
     val blockEntity: CaskBlockEntity?,

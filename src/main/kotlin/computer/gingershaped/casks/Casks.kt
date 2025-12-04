@@ -1,8 +1,6 @@
 package computer.gingershaped.casks
 
 import net.neoforged.fml.common.Mod
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
 /**
@@ -15,9 +13,6 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 @Mod(Casks.ID)
 object Casks {
     const val ID = "casks"
-
-    // the logger for our mod
-    val LOGGER: Logger = LogManager.getLogger(ID)
 
     init {
         CasksRegistries.register(MOD_BUS)

@@ -80,7 +80,7 @@ class CaskBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWat
         random: RandomSource
     ): BlockState {
         if (state.getValue(WATERLOGGED)) {
-            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
         }
 
         if (direction == Direction.DOWN) {
