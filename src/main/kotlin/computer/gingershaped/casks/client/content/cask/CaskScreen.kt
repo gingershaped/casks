@@ -22,6 +22,16 @@ class CaskScreen(menu: CaskMenu, playerInventory: Inventory, title: Component) :
         this.inventoryLabelY = imageHeight - 127
     }
 
+    override fun render(
+        guiGraphics: GuiGraphics,
+        mouseX: Int,
+        mouseY: Int,
+        partialTick: Float
+    ) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick)
+        renderTooltip(guiGraphics, mouseX, mouseY)
+    }
+
     override fun renderBg(
         guiGraphics: GuiGraphics,
         partialTick: Float,
