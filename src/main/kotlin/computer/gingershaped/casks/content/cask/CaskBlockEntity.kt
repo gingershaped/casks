@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -34,6 +35,7 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
     private val coolingDown get() = campfireTransferCooldown > 0
 
     companion object {
+        const val CUSTOM_NAME_TAG = "CustomName"
         const val CAMPFIRE_TRANSFER_COOLDOWN_TAG = "CampfireTransferCooldown"
         const val CAMPFIRE_TRANSFER_RATE = 8
 
@@ -165,12 +167,14 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
     override fun saveAdditional(output: ValueOutput) {
         super.saveAdditional(output)
         inventory.serialize(output)
+        output.storeNullable(CUSTOM_NAME_TAG, ComponentSerialization.CODEC, customName)
         output.putInt(CAMPFIRE_TRANSFER_COOLDOWN_TAG, campfireTransferCooldown)
     }
 
     override fun loadAdditional(input: ValueInput) {
         super.loadAdditional(input)
         inventory.deserialize(input)
+        customName = input.read(CUSTOM_NAME_TAG, ComponentSerialization.CODEC).orElse(null)
         campfireTransferCooldown = input.getIntOr(CAMPFIRE_TRANSFER_COOLDOWN_TAG, 0)
     }
 
