@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.MenuProvider
+import net.minecraft.world.Nameable
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
@@ -29,7 +30,7 @@ import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler
 import net.neoforged.neoforge.transfer.transaction.Transaction
 
 class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegistries.BlockEntityTypes.CASK, pos, state),
-    MenuProvider {
+    MenuProvider, Nameable {
     private var customName: Component? = null
     private var campfireTransferCooldown = 0
     private val coolingDown get() = campfireTransferCooldown > 0
@@ -178,7 +179,11 @@ class CaskBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(CasksRegis
         campfireTransferCooldown = input.getIntOr(CAMPFIRE_TRANSFER_COOLDOWN_TAG, 0)
     }
 
-    override fun getDisplayName() = customName ?: blockState.block.name
+    override fun getName(): Component = blockState.block.name
+
+    override fun getCustomName(): Component? = customName
+
+    override fun getDisplayName() = customName ?: name
 
     override fun createMenu(
         containerId: Int,
